@@ -55,15 +55,78 @@ namespace ft
 				return to;
 			}
 
+			node_pointer _find(node_pointer head, const key_type& key)
+			{
+				if (head == NULL) return NULL;
+				if (_comp(key, head->_ptr->first))
+					return _find(head->left, key);
+				else if (_comp(head->_ptr->first, key))
+					return _find(head->right, key);
+				return head;
+			}
+
+			node_pointer _const_find(node_pointer head, const key_type& key) const
+			{
+				if (head == NULL) return NULL;
+				if (_comp(key, head->_ptr->first))
+					return _find(head->left, key);
+				else if (_comp(head->_ptr->first, key))
+					return _find(head->right, key);
+				return head;
+			}
+
+			int _height(node_pointer node)
+			{
+				return node == NULL ? -1 : node->height;
+			}
+
+			void calculate_height(node_pointer head)
+			{
+				head->height = std::max(_height(head->left), _height(head->right)) + 1;
+			}
+				
+			node_pointer balance_tree(node_pointer head)
+			{
+				if (right_imbalance(head))
+				{
+					if (balance_factor(head->right) > 0)
+						head->right = 
+				}
+			}
+
+			node_pointer _insert(node_pointer head, const value_type& v, node_pointer* to)
+			{
+				if (!head)
+				{
+					size++;
+					to = _make_node(v);
+					return *to;
+				}
+				if (_comp(val.first, head->_ptr->first))
+				{
+					head->left = _insert(parent->left, val, to);
+					if (head->left)
+						head->left->parent = head;
+				}
+				else if (_comp(head->_ptr->first, val.first))
+				{
+					head->right = _insert(parent->right, val, to);
+					if (head->right)
+						head->right->parent = head;
+				}
+				else
+					*to = head;
+				calculate_height(head);
+				head = balance_tree(head);
+				return head;
+			}
+
 		public:
 			avl(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(),
 					const node_allocator_type& node_alloc = node_allocator_type()) :
 				_root(NULL), _alloc(NULL), _node_alloc(node_alloc), _comp(comp), _size(0) {}
 
-			avl(const avl& a) : _root(NULL), _size(0)
-			{
-				*this = a;
-			}
+			avl(const avl& a) : _root(NULL), _size(0) { *this = a; }
 			avl& operator = (const avl& a)
 			{
 				delete_all();
@@ -74,12 +137,25 @@ namespace ft
 				this->_root = insert_all(this->_root, a._root);
 				return *this;
 			}
-			~avl_tree()
+			~avl_tree() { delete_all(); }
+
+			node_pointer find(const key_type& k)
 			{
-				delete_all();
+				if (empty()) return NULL;
+				return _find(_root, k);
+			}
+			node_pointer const_find(const key_type& k) const
+			{
+				if (empty()) return NULL;
+				return _const_find(_root, k);
+			}
+			node_pointer insert(const value_type& v)
+			{
+				node_pointer to = NULL;
+				_root = _insert(_root, v, &to);
+				return to;
 			}
 
-			
 
 			void delete_all()
 			{
