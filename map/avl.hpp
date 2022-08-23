@@ -85,13 +85,58 @@ namespace ft
 				head->height = std::max(_height(head->left), _height(head->right)) + 1;
 			}
 				
-			node_pointer balance_tree(node_pointer head)
+			int balance_factor(node_pointer node)
 			{
-				if (right_imbalance(head))
+				return _height(node->left) - _height(node->right);
+			}
+
+			node_pointer rotate_left(node_pointer node)
+			{
+				node_pointer new_parent = node->right;
+				node->right = new_parent->left;
+				new_parent->left = node;
+				new_parent->parent = node->parent;
+				node->parent = new_parent;
+				if (node->right)
+					node->right->parent = node;
+				if (new_parent->left)
+					new_parent->left->paret = new_parent;
+				calculate_height(node);
+				calculate_height(new_parent);
+				return new_parent;
+			}
+
+			node_pointer rotate_right(node_pointer node)
+			{
+				node_pointer new_parent = node->left;
+				node->left = new_parent->right;
+				new_parent->right = node;
+				new_parent->parent = node->parent;
+				node->parent = new_parent;
+				if (node->left)
+					node->left->parent = node;
+				if (new_parent->right)
+					new_parent->right->paret = new_parent;
+				calculate_height(node);
+				calculate_height(new_parent);
+				return new_parent;
+			}
+
+			node_pointer balance_tree(node_pointer node)
+			{
+				if (balance_factor(node) < -1) // right imbalance
 				{
-					if (balance_factor(head->right) > 0)
-						head->right = 
+					if (balance_factor(node->right) > 0)
+						node->right = rotate_right(node->right);
+					return rotate_left(node);
 				}
+				else if (balance_factor(node) > 1) // left imbalance
+				{
+					if (balance_factor(node->left) < 0)
+						node->left = rotate_left(node->left);
+					return rotate_right(node);
+				}
+				return node;
 			}
 
 			node_pointer _insert(node_pointer head, const value_type& v, node_pointer* to)
