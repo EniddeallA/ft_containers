@@ -14,7 +14,8 @@ namespace ft
 		pair() : first(), second() {}
 		template <typename U, typename V>
 		pair(const pair<U, V>& p) : 
-			first(static_cast<type1>(p.first)), second(static_cast<type2>(p.second)) {}
+			first(static_cast<type1>(p.first)), 
+			second(static_cast<type2>(p.second)) {}
 		pair(const type1& t1, const type2& t2) :
 			first(t1), second(t2)	{}
 		pair& operator = (const pair& p)

@@ -7,9 +7,9 @@ namespace ft
 	template <typename Iter, typename Node>
 	struct bidirectional_iterator : public ft::iterator<std::bidirectional_iterator_tag, Iter>
 	{
-		typedef	Iter	iterator_type;
-		typedef	Node	node_pointer;
-		typedef typename iterator_type::node_type node_type;
+		typedef	Iter									iterator_type;
+		typedef	Node									node_pointer;
+		typedef typename iterator_type::node_type 		node_type;
 		typedef typename iterator_type::value_type		value_type;
 		typedef typename iterator_type::pointer			pointer;
 		typedef typename iterator_type::const_pointer	const_pointer;
@@ -17,47 +17,47 @@ namespace ft
 
 		private:
 			const iterator_type* _tree;
-			node_pointer _head;
+			node_pointer _base;
 			node_pointer	_end;
 		
 		public:
-			bidirectional_iterator() : _head(NULL), _end(NULL), _tree(NULL) {}
+			bidirectional_iterator() : _base(NULL), _end(NULL), _tree(NULL) {}
 			bidirectional_iterator(node_pointer head, const iterator_type& tree) :
-				_head(NULL), _tree(&tree), _end(NULL)
+				_base(NULL), _tree(&tree), _end(NULL)
 			{
 				if (!head)
-					this->_head = _end;
+					this->_base = _end;
 				else
-					this->_head = head;
+					this->_base = head;
 			}
 			template <typename Iter1, typename Node1>
 			bidirectional_iterator( const bidirectional_iterator<Iter1, Node1>& b) :
-				_head(NULL), _end(NULL)
+				_base(NULL), _end(NULL)
 			{
 				this->_tree = b.tree();
-				if (b.head() == b.end())
-					this->_head = this->_end;
+				if (b.base() == b.end())
+					this->_base = this->_end;
 				else
-					this->_head = b.head();
+					this->_base = b.base();
 			}
 			bidirectional_iterator( const bidirectional_iterator& b) :
-				_head(NULL), _end(NULL), _tree(NULL)
+				_base(NULL), _end(NULL), _tree(NULL)
 			{
 				*this = b;
 			}
 			bidirectional_iterator& operator = ( const bidirectional_iterator& b)
 			{
 				this->_tree = b.tree();
-				if (b.head() == b.end())\
-					this->_head = this->_end;
+				if (b.base() == b.end())
+					this->_base = this->_end;
 				else
-					this->_head = b.head();
+					this->_base = b.base();
 				return *this;
 			}
 			~bidirectional_iterator() {}
 
-			node_pointer head() const {
-				return this->_head;
+			node_pointer base() const {
+				return this->_base;
 			}
 			node_pointer end() const {
 				return this->_end;
@@ -68,8 +68,8 @@ namespace ft
 			
 			bool operator == ( const bidirectional_iterator& b )
 			{
-				return (this->_head == b._head || 
-						(this->_head == this->_end && b._head == b._end));
+				return (this->_base == b._base || 
+						(this->_base == this->_end && b._base == b._end));
 			}
 			bool operator != ( const bidirectional_iterator& b )
 			{
@@ -78,19 +78,19 @@ namespace ft
 
 			reference operator * () 
 			{
-				return (*this->_head->_ptr);
+				return (*this->_base->_ptr);
 			}
 			pointer operator-> ()
 			{
-				return (this->_head->_ptr);
+				return (this->_base->_ptr);
 			}
 			const_pointer operator-> () const
 			{
-				return (this->_head->_ptr);
+				return (this->_base->_ptr);
 			}
 
 			bidirectional_iterator& operator ++ () {
-				_head = iterator_type::next_node(_head);
+				_base = iterator_type::next_node(_base);
 				return (*this);
 			}
 			bidirectional_iterator operator ++ ( int ) {
@@ -100,12 +100,12 @@ namespace ft
 			}
 			bidirectional_iterator& operator -- ()
 			{
-				if (this->_head == iterator_type::min_node(_tree->root()))
-					this->_head = iterator_type::prev_node(_end);
-				else if (!_head)
-					this->_head = iterator_type::max_node(_tree->root());
+				if (this->_base == iterator_type::min_node(_tree->root()))
+					this->_base = iterator_type::prev_node(_end);
+				else if (!_base)
+					this->_base = iterator_type::max_node(_tree->root());
 				else
-					this->_head = iterator_type::prev_node(_head);
+					this->_base = iterator_type::prev_node(_base);
 				return (*this);
 			}
 			bidirectional_iterator operator -- ( int )

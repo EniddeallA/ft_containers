@@ -5,6 +5,7 @@
 // you should include your path to this files
 
 #include "map.hpp"       // your map path.
+// #include "map-test-helper.hpp"
 #include <map>
 
 #include <vector>
@@ -249,11 +250,11 @@ void iterator_tests(void)
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
-            ualarm(diff * 1e3, 0);
+            // ualarm(diff * 1e3, 0);
             ft::map<int, std::string>::iterator ft_it = --ft_m.end();
             for (; ft_it != ft_m.begin(); --ft_it)
                 ;
-            ualarm(0, 0);
+            // ualarm(0, 0);
         }
         int res(0);
         {
@@ -385,7 +386,7 @@ void reverse_iterator_tests(void)
     }
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " base function "
               << "] --------------------]\t\t\033[0m";
-    EQUAL( (rit->first == (rit_1.base()->first)) && ( my_rit->first == my_rit1.head()->first ) );
+    EQUAL((rit->first == (rit_1.base()->first)) && (my_rit->first == my_rit1.base()->first));
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " == operator "
               << "] --------------------]\t\t\033[0m";
     EQUAL((rit == rit_1) == (my_rit == my_rit1));
@@ -1334,9 +1335,9 @@ void testModifiers()
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
             /*-----------------------------------------------------*/
             /*------------------ ft::maps ---------------------*/
-            ualarm(diff * 1e3, 0);
+            // ualarm(diff * 1e3, 0);
             ft_m1.erase(ft_m1.begin(), ft_m1.end());
-            ualarm(0, 0);
+            // ualarm(0, 0);
             /*----------------------------------------------------*/
         }
         std::map<char, int> m;
@@ -1902,9 +1903,9 @@ void testOperations()
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
-            ualarm(diff * 1e3, 0);
+            // ualarm(diff * 1e3, 0);
             ft_res = ft_m.lower_bound(1e5)->first;
-            ualarm(0, 0);
+            // ualarm(0, 0);
             cond = ft_res == res;
         }
         std::map<int, std::string> m;
@@ -1952,9 +1953,9 @@ void testOperations()
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
-            ualarm(diff * 1e3, 0);
+            // ualarm(diff * 1e3, 0);
             ft_res = ft_m.upper_bound(1e5)->first;
-            ualarm(0, 0);
+            // ualarm(0, 0);
             cond = ft_res == res;
         }
         std::map<int, std::string> m;
@@ -2005,9 +2006,9 @@ void testOperations()
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
-            ualarm(diff * 1e3, 0);
+            // ualarm(diff * 1e3, 0);
             ft_res = ft_m.equal_range(1e5);
-            ualarm(0, 0);
+            // ualarm(0, 0);
             cond = (ft_res.first->first == res.first->first) && (ft_res.second->first == res.second->first);
         }
         iter_def res;
@@ -2074,7 +2075,6 @@ void testAllocatorMethodes()
         int psize;
         ft::map<char, int> mymap;
         ft::pair<const char, int> *p;
-
         // allocate an array of 5 elements using mymap's allocator:
         p = mymap.get_allocator().allocate(5);
 

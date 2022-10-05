@@ -5,18 +5,20 @@
 
 namespace ft
 {
-	template < typename key, typename T, typename Alloc = std::allocator< ft::pair<const key, T> > >
+	template < typename Key, typename T, 
+			typename Alloc = std::allocator< ft::pair<const Key, T> > 
+			>
 	struct node
 	{
 		public:
-			typedef ft::pair<const key, T>  value_type;
-			typedef key		key_type;
-			typedef T		mapped_type;
-			typedef Alloc	allocator_type;
-			typedef node<const key, T, Alloc>	node_type;
+			typedef ft::pair<const Key, T> 	 			value_type;
+			typedef Key									key_type;
+			typedef T									mapped_type;
+			typedef Alloc								allocator_type;
+			typedef node<const Key, T, Alloc>			node_type;
 			typedef typename allocator_type::pointer	pointer;
 			typedef typename allocator_type::reference	reference;
-			pointer _ptr;
+			pointer 	_ptr;
 			node_type	*parent;
 			node_type	*right;
 			node_type	*left;

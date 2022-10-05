@@ -112,11 +112,11 @@ namespace ft
 			iterator insert(iterator pos, const value_type& val)
 			{
 				node_pointer p = NULL;
-				if (empty() || pos.head() == pos.end() 
-						|| !pos.head()->parent)
+				if (empty() || pos.base() == pos.end() 
+						|| !pos.base()->parent)
 					p = _tree.insert(val);
 				else
-					p = _tree.insert(pos.head(), val);
+					p = _tree.insert(pos.base(), val);
 				return create_iterator(p);
 			}
 			template<class InputIterator>
@@ -128,10 +128,10 @@ namespace ft
 
 			void erase(iterator pos)
 			{
-				if (pos.head() == pos.end())
+				if (pos.base() == pos.end())
 					_tree.delete_node(NULL);
 				else
-					_tree.delete_node(pos.head());
+					_tree.delete_node(pos.base());
 			}
 			size_type erase(const key_type& k)
 			{
@@ -144,17 +144,17 @@ namespace ft
 			}
 
 			void swap(map& m) {
-				allocator_type temp_alloc = m._alloc;
-				key_compare temp_comp = m._comp;
-				value_compare temp_v_comp = m.v_comp;
+				allocator_type tmp_alloc = m._alloc;
+				key_compare tmp_comp = m._comp;
+				value_compare tmp_v_comp = m.v_comp;
 
 				m._alloc = this->_alloc;
 				m._comp = this->_comp;
 				m.v_comp = this->v_comp;
 
-				this->_alloc = temp_alloc;
-				this->_comp = temp_comp;
-				this->v_comp = temp_v_comp;
+				this->_alloc = tmp_alloc;
+				this->_comp = tmp_comp;
+				this->v_comp = tmp_v_comp;
 
 				this->_tree.swap(m._tree);
 			}
@@ -189,27 +189,27 @@ namespace ft
 
 			iterator upper_bound(const key_type& k) 
 			{
-				node_pointer ubp = _tree.upper_bound(k);
-				return create_iterator(ubp);
+				node_pointer n = _tree.upper_bound(k);
+				return create_iterator(n);
 			}
 			const_iterator upper_bound(const key_type& k) const
 			{
-				const_node_pointer ubp = _tree.upper_bound(k);
-				return create_iterator(ubp);
+				const_node_pointer n = _tree.upper_bound(k);
+				return create_iterator(n);
 			}
 
 			ft::pair<iterator, iterator> equal_range(const key_type& k) 
 			{
 				iterator it = lower_bound(k);
 				if (_comp(k, it->first))
-					return ft::make_pair(it, create_iterator(it.head()));
+					return ft::make_pair(it, create_iterator(it.base()));
 				return ft::make_pair(it++, it);
 			}
 			ft::pair<const_iterator, const_iterator> equal_range(const key_type& k) const 
 			{
 				const_iterator it = lower_bound(k);
 				if (_comp(k, it->first))
-					return ft::make_pair(it, create_iterator(it.head()));
+					return ft::make_pair(it, create_iterator(it.base()));
 				return ft::make_pair(it++, it);
 			}
 			
