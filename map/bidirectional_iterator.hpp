@@ -8,7 +8,7 @@ namespace ft
 	struct bidirectional_iterator : public ft::iterator<std::bidirectional_iterator_tag, Iter>
 	{
 		typedef	Iter	iterator_type;
-		typedef	Node	node_ptr;
+		typedef	Node	node_pointer;
 		typedef typename iterator_type::node_type node_type;
 		typedef typename iterator_type::value_type		value_type;
 		typedef typename iterator_type::pointer			pointer;
@@ -16,14 +16,14 @@ namespace ft
 		typedef typename iterator_type::reference		reference;
 
 		private:
-			const iterator_type* tree;
-			node_ptr _head;
-			node_ptr	_end;
+			const iterator_type* _tree;
+			node_pointer _head;
+			node_pointer	_end;
 		
 		public:
-			bidirectional_iterator() : _head(NULL), _end(NULL), tree(NULL) {}
-			bidirectional_iterator(node_ptr head, const iterator_type& tree) :
-				_head(NULL), tree(&tree), _end(NULL)
+			bidirectional_iterator() : _head(NULL), _end(NULL), _tree(NULL) {}
+			bidirectional_iterator(node_pointer head, const iterator_type& tree) :
+				_head(NULL), _tree(&tree), _end(NULL)
 			{
 				if (!head)
 					this->_head = _end;
@@ -34,20 +34,20 @@ namespace ft
 			bidirectional_iterator( const bidirectional_iterator<Iter1, Node1>& b) :
 				_head(NULL), _end(NULL)
 			{
-				this->tree = b.tree();
+				this->_tree = b.tree();
 				if (b.head() == b.end())
 					this->_head = this->_end;
 				else
 					this->_head = b.head();
 			}
 			bidirectional_iterator( const bidirectional_iterator& b) :
-				_head(NULL), _end(NULL), tree(NULL)
+				_head(NULL), _end(NULL), _tree(NULL)
 			{
 				*this = b;
 			}
 			bidirectional_iterator& operator = ( const bidirectional_iterator& b)
 			{
-				this->tree - b.tree();
+				this->_tree = b.tree();
 				if (b.head() == b.end())\
 					this->_head = this->_end;
 				else
@@ -63,7 +63,7 @@ namespace ft
 				return this->_end;
 			}
 			const iterator_type* tree() const {
-				return this->tree;
+				return this->_tree;
 			}
 			
 			bool operator == ( const bidirectional_iterator& b )

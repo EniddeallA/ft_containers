@@ -10,7 +10,6 @@ namespace ft
 		typedef	Iter	iterator_type;
 		typedef typename iterator_type::value_type		value_type;
 		typedef typename iterator_type::pointer			pointer;
-		typedef typename iterator_type::const_pointer	const_pointer;
 		typedef typename iterator_type::reference		reference;
 
 		private:

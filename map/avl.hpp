@@ -31,15 +31,16 @@ namespace ft
 			key_compare		_comp;
 			size_type	_size;
 
-			void _delete_all(node_pointer head)
+			node_pointer _delete_all(node_pointer n)
 			{
-				if (!head) 
-					return;
-				head->left = _delete_all(head->left);
-				head->right = _delete_all(head->right);
-				_node_alloc.destroy(head);
-				_node_alloc.deallocate(head, 1);
+				if (!n) 
+					return NULL;
+				n->left = _delete_all(n->left);
+				n->right = _delete_all(n->right);
+				_node_alloc.destroy(n);
+				_node_alloc.deallocate(n, 1);
 				--_size;
+				return (NULL);
 			}
 
 			node_pointer create_node(const value_type& val = value_type())
@@ -58,10 +59,10 @@ namespace ft
 				to->height = from->height;
 				to->left = _insert_all(to->left, from->left);
 				if (to->left)
-					to->left->_head = to;
+					to->left->parent = to;
 				to->right = _insert_all(to->right, from->right);
 				if (to->right)
-					to->right->_head = to;
+					to->right->parent = to;
 				return to;
 			}
 
@@ -119,8 +120,8 @@ namespace ft
 					n->right->parent = n;
 				if (tmp->left != NULL)
 					tmp->left->parent = tmp;
-				_calculate_height(n);
-				_calculate_height(tmp);
+				calculate_height(n);
+				calculate_height(tmp);
 				return (tmp);
 			}
 
@@ -134,8 +135,8 @@ namespace ft
 					n->left->parent = n;
 				if (tmp->right != NULL)
 					tmp->right->parent = tmp;
-				_calculate_height(n);
-				_calculate_height(tmp);
+				calculate_height(n);
+				calculate_height(tmp);
 				return (tmp);
 			}
 
@@ -161,7 +162,7 @@ namespace ft
 				if (!head)
 				{
 					_size++;
-					*to = _make_node(val);
+					*to = create_node(val);
 					return *to;
 				}
 				if (_comp(val.first, head->_ptr->first))
@@ -282,7 +283,8 @@ namespace ft
 			}
 
 		public:
-			avl(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(),
+			avl(const key_compare& comp = key_compare(), 
+					const allocator_type& alloc = allocator_type(),
 					const node_allocator_type& node_alloc = node_allocator_type()) :
 				_head(NULL), _alloc(NULL), _node_alloc(node_alloc), _comp(comp), _size(0) {}
 			avl(const avl& a) : _head(NULL), _size(0) { *this = a; }
@@ -296,7 +298,7 @@ namespace ft
 				this->_size = a._size;
 				return *this;
 			}
-			~avl_tree() { delete_all(); }
+			~avl() { delete_all(); }
 
 			node_pointer find(const key_type& k)
 			{
@@ -371,25 +373,25 @@ namespace ft
 			{
 				if (_head == NULL) 
 					return NULL;
-				return avl_tree::min_node(_head);
+				return avl::min_node(_head);
 			}
 			const_node_pointer min_node() const
 			{
 				if (_head == NULL) 
 					return NULL;
-				return avl_tree::min_node(_head);
+				return avl::min_node(_head);
 			}
 			node_pointer max_node()
 			{
 				if (_head == NULL) 
 					return NULL;
-				return avl_tree::max_node(_head);
+				return avl::max_node(_head);
 			}
 			const_node_pointer max_node() const
 			{
 				if (_head == NULL) 
 					return NULL;
-				return avl_tree::max_node(_head);
+				return avl::max_node(_head);
 			}
 			static node_pointer min_node(node_pointer parent) 
 			{
@@ -527,7 +529,7 @@ namespace ft
 				return next_node(n);
 			}
 
-			void swap(avl_tree& t) {
+			void swap(avl& t) {
 				node_pointer		temp_head = t._head;
 				allocator_type 		temp_alloc = t._alloc;
 				node_allocator_type	temp_node_alloc = t._node_alloc;
