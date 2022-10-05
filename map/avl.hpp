@@ -10,54 +10,65 @@ namespace ft
 	class avl
 	{
 		public:
-			typedef std::bidirectional_iterator_tag	iterator_category;
 			typedef ft::pair<const Key, T>							value_type;
 			typedef Key												key_type;
 			typedef T												mapped_type;
 			typedef Compare											key_compare;
 			typedef	node<const Key, T, Alloc>						node_type;
 			typedef Alloc											allocator_type;
-			typedef typename Alloc::template rebind<node<const Key, T, Alloc> >::other	node_allocator_type;
 			typedef typename allocator_type::pointer				pointer;
 			typedef typename allocator_type::const_pointer			const_pointer;
 			typedef typename allocator_type::reference				reference;
+			typedef typename Alloc::template rebind<node<const Key, T, Alloc> >::other	node_allocator_type;
 			typedef typename node_allocator_type::pointer			node_pointer;
 			typedef typename node_allocator_type::const_pointer		const_node_pointer;
 			typedef size_t											size_type;
 
 		private:
-			node_pointer	_root;
+			node_pointer	_head;
 			allocator_type	_alloc;
 			node_allocator_type	_node_alloc;
 			key_compare		_comp;
 			size_type	_size;
 
-			node_pointer _delete_all(node_pointer head)
+			void _delete_all(node_pointer head)
 			{
-				if (!head) return NULL;
+				if (!head) 
+					return;
 				head->left = _delete_all(head->left);
 				head->right = _delete_all(head->right);
 				_node_alloc.destroy(head);
 				_node_alloc.deallocate(head, 1);
 				--_size;
-				return (NULL);
 			}
 
-			node_pointer insert_all(node_pointer to, node_pointer from)
+			node_pointer create_node(const value_type& val = value_type())
 			{
-				if (!from)	return NULL;
-				to = make_node(*from->_ptr);
+				node_pointer _ptr = NULL;
+				_ptr = _node_alloc.allocate(1);
+				_node_alloc.construct(_ptr, node_type(val, _alloc));
+				return (_ptr);
+			}
+
+			node_pointer _insert_all(node_pointer to, node_pointer from)
+			{
+				if (!from)
+					return NULL;
+				to = create_node(*from->_ptr);
 				to->height = from->height;
-				to->left = insert_all(to->left, from->left);
-				if (to->left)	to->left->parent = to;
-				to->right = _insert_all(parent->right, from->right);
-				if (to->right)	to->right->parent = to;
+				to->left = _insert_all(to->left, from->left);
+				if (to->left)
+					to->left->_head = to;
+				to->right = _insert_all(to->right, from->right);
+				if (to->right)
+					to->right->_head = to;
 				return to;
 			}
 
 			node_pointer _find(node_pointer head, const key_type& key)
 			{
-				if (head == NULL) return NULL;
+				if (head == NULL) 
+					return NULL;
 				if (_comp(key, head->_ptr->first))
 					return _find(head->left, key);
 				else if (_comp(head->_ptr->first, key))
@@ -75,42 +86,93 @@ namespace ft
 				return head;
 			}
 
-			int _height(node_pointer node)
+			int height(node_pointer node)
 			{
 				return node == NULL ? -1 : node->height;
 			}
 
 			void calculate_height(node_pointer head)
 			{
-				head->height = std::max(_height(head->left), _height(head->right)) + 1;
+				head->height = std::max(height(head->left), height(head->right)) + 1;
 			}
-				
-			node_pointer balance_tree(node_pointer head)
+			
+			int balance_factor(node_pointer n)
 			{
-				if (right_imbalance(head))
-				{
-					if (balance_factor(head->right) > 0)
-						head->right = 
-				}
+				return height(n->left) - height(n->right);
+			}
+			bool left_unbalance(node_pointer n)
+			{
+				return balance_factor(n) > 1;
+			}
+			bool right_unbalance(node_pointer n)
+			{
+				return balance_factor(n) < -1;
 			}
 
-			node_pointer _insert(node_pointer head, const value_type& v, node_pointer* to)
+			node_pointer rotate_left(node_pointer n) {
+				node_pointer tmp = n->right;
+				n->right = tmp->left;
+				tmp->left = n;
+				tmp->parent = n->parent;
+				n->parent = tmp;
+				if (n->right != NULL)
+					n->right->parent = n;
+				if (tmp->left != NULL)
+					tmp->left->parent = tmp;
+				_calculate_height(n);
+				_calculate_height(tmp);
+				return (tmp);
+			}
+
+			node_pointer rotate_right(node_pointer n) {
+				node_pointer tmp = n->left;
+				n->left = tmp->right;
+				tmp->right = n;
+				tmp->parent = n->parent;
+				n->parent = tmp;
+				if (n->left != NULL)
+					n->left->parent = n;
+				if (tmp->right != NULL)
+					tmp->right->parent = tmp;
+				_calculate_height(n);
+				_calculate_height(tmp);
+				return (tmp);
+			}
+
+			node_pointer balance_tree(node_pointer head)
+			{
+				if (right_unbalance(head)) 
+				{
+					if (balance_factor(head->right) > 0)
+						head->right = rotate_right(head->right);
+					return rotate_left(head);
+				}
+				else if (left_unbalance(head)) 
+				{
+					if (balance_factor(head->left) < 0)
+						head->left = rotate_left(head->left);
+					return rotate_right(head);
+				}
+				return (head);
+			}
+
+			node_pointer _insert(node_pointer head, const value_type& val, node_pointer* to)
 			{
 				if (!head)
 				{
-					size++;
-					to = _make_node(v);
+					_size++;
+					*to = _make_node(val);
 					return *to;
 				}
 				if (_comp(val.first, head->_ptr->first))
 				{
-					head->left = _insert(parent->left, val, to);
+					head->left = _insert(head->left, val, to);
 					if (head->left)
 						head->left->parent = head;
 				}
 				else if (_comp(head->_ptr->first, val.first))
 				{
-					head->right = _insert(parent->right, val, to);
+					head->right = _insert(head->right, val, to);
 					if (head->right)
 						head->right->parent = head;
 				}
@@ -121,45 +183,369 @@ namespace ft
 				return head;
 			}
 
+			node_pointer _delete(node_pointer node)
+			{
+				// key found, now start deletion
+				if (node->left == NULL || node->right == NULL)
+				{
+					// now we replace parent by left/right 
+					// depend on which is not NULL
+					node_pointer new_node;
+					if (node->left)
+						new_node = node->left;
+					else
+						new_node = node->righy;
+					// destroy the node
+					_node_alloc.destroy(node);
+					_node_alloc.deallocate(node, 1);
+					node = new_node;
+				} 
+				else 
+				{
+					// find max_node in the left subtree
+					node_pointer max = max_node(node->left);
+					// remove max from its parent
+					if (max == node->left)
+						max->parent->left = max->left;
+					else
+						max->parent->right = max->left;
+					if (max->left != NULL)
+						max->left->parent = max->parent;
+					// assign max_node the children of node
+					max->left = node->left;
+					max->right = node->right;
+					if (max->left != NULL)
+						max->left->parent = max;
+					if (max->right != NULL)
+						max->right->parent = max;
+					// destory node
+					_node_alloc.destroy(node);
+					_node_alloc.deallocate(node, 1);
+					node = max;
+				}
+				--_size;
+				return (node);
+			}
+
+			node_pointer delete_key_node(node_pointer head, const key_type& key)
+			{
+				if (!head) 
+					return NULL;
+				if (_comp(key, head->_ptr->first))
+				{
+					head->left = delete_key_node(head->left, key);
+					if (head->left != NULL)
+						head->left->parent = head;
+				} 
+				else if (_comp(head->_ptr->first, key)) 
+				{
+					head->right = delete_key_node(head->right, key);
+					if (head->right != NULL)
+						head->right->parent = head;
+				} 
+				else {
+					head = _delete(head);
+					if (!head) 
+						return NULL;
+					head->parent = NULL;
+				}
+				calculate_height(head);
+				head = balance_tree(head);
+				return (head);
+			}
+
+			node_pointer _delete_node(node_pointer head, node_pointer node) {
+				if (head == NULL) 
+					return NULL;
+				if (_comp(node->_ptr->first, head->_ptr->first)) 
+				{
+					head->left = _delete_node(head->left, node);
+					if (head->left != NULL)
+						head->left->parent = head;
+				} 
+				else if (_comp(head->_ptr->first, node->_ptr->first)) 
+				{
+					head->right = _delete_node(head->right, node);
+					if (head->right != NULL)
+						head->right->parent = head;
+				} 
+				else
+				{
+					head = _delete(head);
+					if (head == NULL) 
+						return NULL;
+					head->parent = NULL;
+				}
+				calculate_height(head);
+				head = balance_tree(head);
+				return (head);
+			}
+
 		public:
 			avl(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(),
 					const node_allocator_type& node_alloc = node_allocator_type()) :
-				_root(NULL), _alloc(NULL), _node_alloc(node_alloc), _comp(comp), _size(0) {}
-
-			avl(const avl& a) : _root(NULL), _size(0) { *this = a; }
+				_head(NULL), _alloc(NULL), _node_alloc(node_alloc), _comp(comp), _size(0) {}
+			avl(const avl& a) : _head(NULL), _size(0) { *this = a; }
 			avl& operator = (const avl& a)
 			{
 				delete_all();
+				this->_head = _insert_all(this->_head, a._head);
 				this->_alloc = a._alloc;
 				this->_node_alloc = a._node_alloc;
 				this->_comp = a._comp;
 				this->_size = a._size;
-				this->_root = insert_all(this->_root, a._root);
 				return *this;
 			}
 			~avl_tree() { delete_all(); }
 
 			node_pointer find(const key_type& k)
 			{
-				if (empty()) return NULL;
-				return _find(_root, k);
+				if (empty()) 
+					return NULL;
+				return _find(_head, k);
 			}
 			node_pointer const_find(const key_type& k) const
 			{
-				if (empty()) return NULL;
-				return _const_find(_root, k);
+				if (empty())
+					return NULL;
+				return _const_find(_head, k);
 			}
+
 			node_pointer insert(const value_type& v)
 			{
 				node_pointer to = NULL;
-				_root = _insert(_root, v, &to);
+				_head = _insert(_head, v, &to);
+				return to;
+			}
+			node_pointer insert(node_pointer n, const value_type& val)
+			{
+				node_pointer tmp = _head;
+				while (tmp != NULL) {
+					if (tmp == n)
+						break ;
+					else if (_comp(val.first, tmp->_ptr->first))
+					{
+						if (tmp->left == NULL)
+							break ;
+						tmp = tmp->left;
+					} 
+					else if (_comp(tmp->_ptr->first, val.first)) 
+					{
+						if (tmp->right == NULL)
+							break ;
+						tmp = tmp->right;
+					}
+					else
+						break ;
+				}
+				node_pointer to = NULL;
+				tmp = _insert(tmp, val, &to);
 				return to;
 			}
 
-
+			size_type delete_node(const key_type& key, bool is_key)
+			{
+				size_type old_size = _size;
+				if (empty() || !is_key) 
+					return 0;
+				_head = delete_key_node(_head, key);
+				if (_head != NULL) 
+					_head->parent = NULL;
+				return old_size - _size;
+			}
+			void delete_node(node_pointer node)
+			{
+				if (empty()) 
+					return;
+				_head = _delete_node(_head, node);
+				if (_head != NULL) 
+					_head->parent = NULL;
+			}
 			void delete_all()
 			{
-				_root = _delete_all(_root);
+				_delete_all(_head);
+				_head = NULL;
 			}
+
+			node_pointer min_node()
+			{
+				if (_head == NULL) 
+					return NULL;
+				return avl_tree::min_node(_head);
+			}
+			const_node_pointer min_node() const
+			{
+				if (_head == NULL) 
+					return NULL;
+				return avl_tree::min_node(_head);
+			}
+			node_pointer max_node()
+			{
+				if (_head == NULL) 
+					return NULL;
+				return avl_tree::max_node(_head);
+			}
+			const_node_pointer max_node() const
+			{
+				if (_head == NULL) 
+					return NULL;
+				return avl_tree::max_node(_head);
+			}
+			static node_pointer min_node(node_pointer parent) 
+			{
+				if (parent->left == NULL) 
+					return parent;
+				return min_node(parent->left);
+			}
+			static const_node_pointer min_node(const_node_pointer parent) 
+			{
+				if (parent->left == NULL) 
+					return parent;
+				return min_node(parent->left);
+			}
+			static node_pointer max_node(node_pointer parent) 
+			{
+				if (parent->right == NULL) 
+					return parent;
+				return max_node(parent->right);
+			}
+			static const_node_pointer max_node(const_node_pointer parent) 
+			{
+				if (parent->right == NULL) 
+					return parent;
+				return max_node(parent->right);
+			}
+
+			node_pointer head() const
+			{
+				return _head;
+			}
+			size_type size() const
+			{
+				return _size;
+			}
+			bool empty() const
+			{
+				return _size == 0;
+			}
+
+			static node_pointer next_node(node_pointer node) 
+			{
+				key_compare	comp = key_compare();
+				if (!node->right)
+				{
+					node_pointer n = node->parent;
+					while (n && comp(n->_ptr->first, node->_ptr->first))
+						n = n->parent;
+					return n;
+				}
+				else 
+					return min_node(node->right);
+			}
+			static const_node_pointer next_node(const_node_pointer node) 
+			{
+				key_compare	comp = key_compare();
+				if (!node->right) 
+				{
+					node_pointer n = node->parent;
+					while (n && comp(n->_ptr->first, node->_ptr->first))
+						n = n->parent;
+					return n;
+				}
+				else
+					return min_node(node->right);
+			}
+			static node_pointer prev_node(node_pointer node) 
+			{
+				key_compare	comp = key_compare();
+				if (!node->left) 
+				{
+					node_pointer n = node->parent;
+					while (n && comp(node->_ptr->first, n->_ptr->first))
+						n = n->parent;
+					return n;
+				} 
+				else
+					return max_node(node->left);
+			}
+			static const_node_pointer prev_node(const_node_pointer node) 
+			{
+				key_compare	comp = key_compare();
+				if (!node->left)
+				{
+					node_pointer n = node->parent;
+					while (n && comp(node->_ptr->first, n->_ptr->first))
+						n = n->parent;
+					return n;
+				} 
+				else
+					return max_node(node->left);
+			}
+
+			node_pointer lower_bound(const key_type& k) 
+			{
+				if (empty()) 
+					return NULL;
+				node_pointer n = min_node();
+				while (n && _comp(n->_ptr->first, k))
+					n = next_node(n);
+				return n;
+			}
+			const_node_pointer lower_bound(const key_type& k) const 
+			{
+				if (empty()) 
+					return NULL;
+				const_node_pointer n = min_node();
+				while (n && _comp(n->_ptr->first, k))
+					n = next_node(n);
+				return n;
+			}
+			node_pointer upper_bound(const key_type& k) 
+			{
+				if (empty()) 
+					return NULL;
+				node_pointer n = min_node();
+				while (n && _comp(n->_ptr->first, k))
+					n = next_node(n);
+				if (!n) 
+					return NULL;
+				if (_comp(k, n->_ptr->first)) 
+					return n;
+				return next_node(n);
+			}
+			const_node_pointer upper_bound(const key_type& k) const 
+			{
+				if (empty()) 
+					return NULL;
+				const_node_pointer n = min_node();
+				while (n && _comp(n->_ptr->first, k))
+					n = next_node(n);
+				if (!n) 
+					return NULL;
+				if (_comp(k, n->_ptr->first)) 
+					return n;
+				return next_node(n);
+			}
+
+			void swap(avl_tree& t) {
+				node_pointer		temp_head = t._head;
+				allocator_type 		temp_alloc = t._alloc;
+				node_allocator_type	temp_node_alloc = t._node_alloc;
+				key_compare			temp_comp = t._comp;
+				size_type			temp_size = t._size;
+
+				t._head = this->_head;
+				t._alloc = this->_alloc;
+				t._node_alloc = this->_node_alloc;
+				t._comp = this->_comp;
+				t._size = this->_size;
+
+				this->_head = temp_head;
+				this->_alloc = temp_alloc;
+				this->_node_alloc = temp_node_alloc;
+				this->_comp = temp_comp;
+				this->_size = temp_size;
+			}
+
 	};
 } // namespace ft

@@ -10,7 +10,6 @@ namespace ft
 
 		type1 first;
 		type2 second;
-
 		pair() : first(), second() {}
 		template <typename U, typename V>
 		pair(const pair<U, V>& p) : 

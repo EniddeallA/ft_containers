@@ -16,16 +16,14 @@ namespace ft
 			typedef node<const key, T, Alloc>	node_type;
 			typedef typename allocator_type::pointer	pointer;
 			typedef typename allocator_type::reference	reference;
-
-		private:
-			allocator_type	_alloc;
-
-		public:
 			pointer _ptr;
 			node_type	*parent;
 			node_type	*right;
 			node_type	*left;
 			int height;
+
+		private:
+			allocator_type	_alloc;
 
 		// Explicit Keyword is used to to not implicitly convert types
 		explicit node(const value_type& val, const allocator_type& alloc = allocator_type()) :
@@ -52,9 +50,9 @@ namespace ft
 			this->_alloc.deallocate(_ptr, 1);
 		}
 
-		void set_content(const value_type& val)
+		void set_value(const value_type& val)
 		{
-			if (_ptr != NULL)
+			if (_ptr)
 				this->_alloc.destroy(_ptr);
 			else
 				this->_ptr = this->_alloc.allocate(1);
