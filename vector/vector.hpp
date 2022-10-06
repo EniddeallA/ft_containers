@@ -70,7 +70,7 @@ namespace ft
             m_capacity = 0;
             m_valptr = NULL;
             m_alloc = alloc;
-            reserve(ft::distance(first, last));
+            reserve(std::distance(first, last));
             initIterRange(first, last);
         }
 
@@ -161,7 +161,7 @@ namespace ft
                 typename enable_if< !is_integral<InputIt>::value, InputIt >::type* = NULL
         ) {
             clear();
-            reserve(ft::distance(first, last));
+            reserve(std::distance(first, last));
             initIterRange(first, last);
         }
 
@@ -216,7 +216,7 @@ namespace ft
             vector tmp;
             tmp.assign(position, end());
 
-            difference_type n = ft::distance(first, last);
+            difference_type n = std::distance(first, last);
             if ( (n + m_capacity) > (m_capacity * 2) ) {
                 reserve(m_size + n);
             } else if (!m_size) {

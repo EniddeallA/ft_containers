@@ -3,7 +3,6 @@
 #include "iterator_traits.hpp"
 
 namespace ft {
-
     template<typename InputIt1, typename InputIt2>
     bool equal(
         InputIt1 first1,
