@@ -26,7 +26,7 @@
 #define RESET "\e[0m"
 
 #define EQUAL(x) ((x) ? (std::cout << "\033[1;32mAC\033[0m\n") : (std::cout << "\033[1;31mWA\033[0m\n"))
-#define TIME_FAC 5 // the ft::map methods can be slower up to std::map methods * TIME_FAC (MAX 20)
+#define TIME_FAC 10 // the ft::map methods can be slower up to std::map methods * TIME_FAC (MAX 20)
 
 typedef std::pair<std::map<int, std::string>::iterator, std::map<int, std::string>::iterator> iter_def;
 typedef ft::pair<ft::map<int, std::string>::iterator, ft::map<int, std::string>::iterator> ft_iter_def;
@@ -250,11 +250,11 @@ void iterator_tests(void)
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
-            // ualarm(diff * 1e3, 0);
+            ualarm(diff * 1e3, 0);
             ft::map<int, std::string>::iterator ft_it = --ft_m.end();
             for (; ft_it != ft_m.begin(); --ft_it)
                 ;
-            // ualarm(0, 0);
+            ualarm(0, 0);
         }
         int res(0);
         {
@@ -1335,9 +1335,9 @@ void testModifiers()
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
             /*-----------------------------------------------------*/
             /*------------------ ft::maps ---------------------*/
-            // ualarm(diff * 1e3, 0);
+            ualarm(diff * 1e3, 0);
             ft_m1.erase(ft_m1.begin(), ft_m1.end());
-            // ualarm(0, 0);
+            ualarm(0, 0);
             /*----------------------------------------------------*/
         }
         std::map<char, int> m;
@@ -1903,9 +1903,9 @@ void testOperations()
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
-            // ualarm(diff * 1e3, 0);
+            ualarm(diff * 1e3, 0);
             ft_res = ft_m.lower_bound(1e5)->first;
-            // ualarm(0, 0);
+            ualarm(0, 0);
             cond = ft_res == res;
         }
         std::map<int, std::string> m;
@@ -1953,9 +1953,9 @@ void testOperations()
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
-            // ualarm(diff * 1e3, 0);
+            ualarm(diff * 1e3, 0);
             ft_res = ft_m.upper_bound(1e5)->first;
-            // ualarm(0, 0);
+            ualarm(0, 0);
             cond = ft_res == res;
         }
         std::map<int, std::string> m;
@@ -2006,9 +2006,9 @@ void testOperations()
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
-            // ualarm(diff * 1e3, 0);
+            ualarm(diff * 1e3, 0);
             ft_res = ft_m.equal_range(1e5);
-            // ualarm(0, 0);
+            ualarm(0, 0);
             cond = (ft_res.first->first == res.first->first) && (ft_res.second->first == res.second->first);
         }
         iter_def res;

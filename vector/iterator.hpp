@@ -14,84 +14,82 @@ namespace ft {
         typedef value_type const *                                          const_pointer;
         typedef typename iterator_traits<iterator_type>::reference          reference;
         typedef value_type const &                                          const_reference;
-
         pointer it;
 
         vector_iterator(): it(NULL) {}
-
-        vector_iterator(pointer pIter): it(pIter) {
-
-        }
-
+        vector_iterator(pointer pIter): it(pIter) {}
         ~vector_iterator() {}
 
-        vector_iterator base() const {
-            return vector_iterator(it);
-        }
+        vector_iterator base() const { return vector_iterator(it); }
 
-        operator vector_iterator<const_pointer> () const {
+        operator vector_iterator<const_pointer> () const 
+		{
             return vector_iterator<const_pointer>(it);
         }
 
-        vector_iterator& operator=( value_type const& otherIt ) {
-            it = &otherIt;
+        vector_iterator& operator=( value_type const& oIt ) 
+		{
+            it = &oIt;
             return *this;
         }
 
-        reference operator*() const {
-            return *it;
-        }
+        reference operator*() const { return *it; }
 
-        pointer operator->() {
-            return it;
-        }
+        pointer operator->() { return it; }
 
-        reference operator[](size_t val) {
-            return it[val];
-        }
+        reference operator[](size_t val) { return it[val]; }
 
-        vector_iterator &operator++() {
+        vector_iterator &operator++() 
+		{
             it++;
             return *this;
         }
 
-        vector_iterator operator++(int) {
+        vector_iterator operator++(int) 
+		{
             vector_iterator tmp = *this;
             it++;
             return tmp;
         }
 
-        vector_iterator &operator--() {
+        vector_iterator &operator--()
+		{
             it--;
             return *this;
         }
 
-        vector_iterator operator--(int) {
+        vector_iterator operator--(int)
+		{
             vector_iterator tmp = *this;
             it--;
             return tmp;
         }
 
-        vector_iterator& operator+=( int value ) {
+        vector_iterator& operator+=( int value )
+		{
             it += value;
             return *this;
         }
 
-        vector_iterator &operator-=(int value) {
+        vector_iterator &operator-=(int value)
+		{
             it -= value;
             return *this;
         }
 
-        friend vector_iterator operator+( vector_iterator other, difference_type i ) {
-            return other.it + i;
+        friend vector_iterator operator+( vector_iterator o, difference_type i )
+		{
+            return o.it + i;
         }
 
-        friend vector_iterator operator+( difference_type i, vector_iterator other ) {
-            return other.it + i;
+        friend vector_iterator operator+( difference_type i, vector_iterator o )
+		{
+            return o.it + i;
         }
 
-        friend vector_iterator operator-( vector_iterator other, difference_type i) {
-            return (other.it - i);
+        friend vector_iterator operator-( vector_iterator o, difference_type i)
+		{
+            return (o.it - i);
         }
 
         vector_iterator operator-(int value) const {
@@ -99,8 +97,8 @@ namespace ft {
             return tmp -= value;
         }
 
-        difference_type operator-(vector_iterator const &other) const {
-            return it - other.it;
+        difference_type operator-(vector_iterator const &o) const {
+            return it - o.it;
         }
     }; // class vector_iterator
 

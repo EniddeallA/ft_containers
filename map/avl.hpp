@@ -1,6 +1,7 @@
 #pragma once
 
 #include "node.hpp"
+#include <algorithm>
 
 namespace ft
 {
