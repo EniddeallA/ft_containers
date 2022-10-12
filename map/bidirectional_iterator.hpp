@@ -21,9 +21,9 @@ namespace ft
 			node_pointer	_end;
 		
 		public:
-			bidirectional_iterator() : _base(NULL), _end(NULL), _tree(NULL) {}
+			bidirectional_iterator() : _tree(NULL), _base(NULL), _end(NULL) {}
 			bidirectional_iterator(node_pointer head, const iterator_type& tree) :
-				_base(NULL), _tree(&tree), _end(NULL)
+				_tree(&tree), _base(NULL), _end(NULL)
 			{
 				if (!head)
 					this->_base = _end;
@@ -41,7 +41,7 @@ namespace ft
 					this->_base = b.base();
 			}
 			bidirectional_iterator( const bidirectional_iterator& b) :
-				_base(NULL), _end(NULL), _tree(NULL)
+				_tree(NULL), _base(NULL), _end(NULL) 
 			{
 				*this = b;
 			}

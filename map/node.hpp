@@ -30,7 +30,7 @@ namespace ft
 		public:
 			// Explicit Keyword is used to to not implicitly convert types
 			explicit node(const value_type& val, const allocator_type& alloc = allocator_type()) :
-				_alloc(alloc), left(NULL), right(NULL), parent(NULL), height(0)
+				parent(NULL), right(NULL), left(NULL), height(0), _alloc(alloc)
 			{
 				this->_ptr = this->_alloc.allocate(1);
 				this->_alloc.construct(_ptr, val);
