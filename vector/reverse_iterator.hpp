@@ -5,9 +5,9 @@
 
 namespace ft {
 
-    template<typename Iterator>
+    template<typename Iter>
     struct reverse_iterator {
-        typedef Iterator                                                    iterator_type;
+        typedef Iter                                                    	iterator_type;
         typedef typename iterator_traits<iterator_type>::iterator_category  iterator_category;
         typedef typename iterator_traits<iterator_type>::value_type         value_type;
         typedef typename iterator_traits<iterator_type>::difference_type    difference_type;
@@ -18,8 +18,8 @@ namespace ft {
         reverse_iterator() {}
         explicit reverse_iterator( iterator_type iter) { it = iter; }
 
-        template<typename Iter>
-        reverse_iterator( reverse_iterator<Iter> const& rev_iter ) { it = rev_iter.base(); }
+        template<typename It>
+        reverse_iterator( reverse_iterator<It> const& rev_iter ) { it = rev_iter.base(); }
 
         ~reverse_iterator() {}
 
@@ -67,9 +67,9 @@ namespace ft {
 
         reverse_iterator operator+(difference_type i) const { return reverse_iterator(it - i); }
 
-        reverse_iterator operator-(difference_type n) const { return reverse_iterator(it + n); }
+        reverse_iterator operator-(difference_type i) const { return reverse_iterator(it + i); }
 
-        reference operator*() const { return *(--Iterator(it)); }
+        reference operator*() const { return *(--Iter(it)); }
 
         pointer operator->() const { return &(operator*()); }
     }; // class reverse_iterator
@@ -107,16 +107,16 @@ namespace ft {
     template<typename Iter>
     reverse_iterator<Iter> operator+(
         typename reverse_iterator<Iter>::difference_type n,
-        reverse_iterator<Iter> const &rev_it) 
+        reverse_iterator<Iter> const &it) 
 	{
-        return reverse_iterator<Iter>(rev_it.base() - n);
+        return reverse_iterator<Iter>(it.base() - n);
     }
 
     template<typename Iter>
     typename reverse_iterator<Iter>::difference_type operator-(
         reverse_iterator<Iter> const &lhs, reverse_iterator<Iter> const &rhs ) 
 	{
-        return -1 * (lhs.base() - rhs.base());
+        return (rhs.base() - lhs.base());
     }
 
 } // namespace ft

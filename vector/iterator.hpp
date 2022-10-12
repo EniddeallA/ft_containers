@@ -11,13 +11,18 @@ namespace ft {
         typedef typename iterator_traits<iterator_type>::value_type         value_type;
         typedef typename iterator_traits<iterator_type>::difference_type    difference_type;
         typedef typename iterator_traits<iterator_type>::pointer            pointer;
-        typedef value_type const *                                          const_pointer;
         typedef typename iterator_traits<iterator_type>::reference          reference;
-        typedef value_type const &                                          const_reference;
+        typedef value_type const 											*const_pointer;
+        typedef value_type const						 					&const_reference;
         pointer it;
 
         vector_iterator(): it(NULL) {}
         vector_iterator(pointer pIter): it(pIter) {}
+        vector_iterator& operator=( value_type const& v ) 
+		{
+            it = &v;
+            return *this;
+        }
         ~vector_iterator() {}
 
         vector_iterator base() const { return vector_iterator(it); }
@@ -27,17 +32,11 @@ namespace ft {
             return vector_iterator<const_pointer>(it);
         }
 
-        vector_iterator& operator=( value_type const& oIt ) 
-		{
-            it = &oIt;
-            return *this;
-        }
-
         reference operator*() const { return *it; }
 
         pointer operator->() { return it; }
 
-        reference operator[](size_t val) { return it[val]; }
+        reference operator[](difference_type val) { return it[val]; }
 
         vector_iterator &operator++() 
 		{
@@ -90,11 +89,6 @@ namespace ft {
         friend vector_iterator operator-( vector_iterator o, difference_type i)
 		{
             return (o.it - i);
-        }
-
-        vector_iterator operator-(int value) const {
-            vector_iterator tmp = *this;
-            return tmp -= value;
         }
 
         difference_type operator-(vector_iterator const &o) const {

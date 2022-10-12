@@ -48,12 +48,7 @@ namespace ft
 				return (this->_base != i._base);
 			}
 
-			reference operator * () 
-			{
-				iterator_type i = this->_base;
-				--i;
-				return (*i);
-			}
+			reference operator * ()  { return (*(this->_base - 1)); }
 			pointer operator-> ()  { return &(operator*()); }
 
 			rbidirectional_iterator& operator ++ () 

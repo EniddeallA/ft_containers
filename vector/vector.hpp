@@ -34,7 +34,8 @@ namespace ft
 			size_type       m_size;
 			size_type       m_capacity;
 
-			void clean() {
+			void clean() 
+			{
 				clear();
 				if (m_capacity)
 					m_alloc.deallocate(m_valptr, m_capacity);
@@ -91,7 +92,7 @@ namespace ft
 
 			template<typename InputIt>
 			vector (InputIt first, InputIt last, allocator_type const &alloc = allocator_type(),
-					typename ft::enable_if< !is_integral<InputIt>::value, InputIt>::type* = NULL)
+					typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt >::type* = NULL)
 			{
 				m_size = 0;
 				m_capacity = 0;
@@ -191,7 +192,7 @@ namespace ft
 
 			template <class InputIt>
 			void assign (InputIt first, InputIt last,
-					typename ft::enable_if< !is_integral<InputIt>::value, InputIt >::type* = NULL) 
+					typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt >::type* = NULL) 
 			{
 				clear();
 				reserve(std::distance(first, last));
@@ -233,7 +234,7 @@ namespace ft
 
 			template<typename InputIt>
 			void insert(iterator position, InputIt first, InputIt last,
-					typename ft::enable_if<!is_integral<InputIt>::value, InputIt >::type* = NULL)
+					typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt >::type* = NULL)
 			{
 				difference_type pos = position - begin();
 				size_type element_to_move = end() - position;

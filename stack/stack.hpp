@@ -1,13 +1,14 @@
 #pragma once
 
-#include "../vector/vector.hpp"
+#include <deque>
+#include <iostream>
 
 namespace ft 
 {
 
     template<
             typename T,
-            typename Container = vector<T>
+            typename Container = std::deque<T>
     >
     class stack {
 		public:
