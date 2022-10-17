@@ -122,9 +122,9 @@ namespace ft
 
 			void push_back(const_reference val ) 
 			{
-			if (m_size >= m_capacity)
-				reserve(!(m_capacity * 2) ? 1 : m_capacity * 2 );
-			m_alloc.construct(m_valptr + m_size++, val);
+				if (m_size >= m_capacity)
+					reserve(!(m_capacity * 2) ? 1 : m_capacity * 2 );
+				m_alloc.construct(m_valptr + m_size++, val);
 			}
 
 			void pop_back() 
@@ -275,9 +275,7 @@ namespace ft
 			{
 				difference_type pos = position - begin();
 				m_alloc.destroy(m_valptr + pos);
-
 				size_type element_to_move = end() - position - 1;
-
 				m_size = pos;
 				for(size_type i = 0; i < element_to_move; i++)
 					push_back(m_valptr[i+ pos + 1]);
@@ -288,7 +286,6 @@ namespace ft
 			{
 				difference_type start_pos = first - begin();
 				difference_type last_pos = last - begin();
-
 				for (int i = start_pos; i < last_pos; i++)
 					m_alloc.destroy(m_valptr + i);
 				size_type element_to_move = end() - last;
@@ -331,23 +328,18 @@ namespace ft
 			}
 
 			reference front() { return m_valptr[0]; }
-
 			const_reference front() const { return m_valptr[0]; }
 
 			iterator	begin() { return iterator(m_valptr); }
-
 			const_iterator begin() const { return const_iterator(m_valptr); }
 
 			iterator	end() { return iterator(m_valptr + m_size); }
-
 			const_iterator end() const { return const_iterator(m_valptr + m_size); }
 
 			reverse_iterator rbegin() { return reverse_iterator(end()); }
-
-			reverse_iterator rend() { return  reverse_iterator(this->begin()); }
-
 			const_reverse_iterator rbegin() const { return const_reverse_iterator(end());  }
 
+			reverse_iterator rend() { return  reverse_iterator(this->begin()); }
 			const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
        
     }; // class vector

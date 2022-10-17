@@ -12,7 +12,7 @@ namespace ft
 			typename Compare = std::less<Key>,
 			typename Alloc = std::allocator< ft::pair<const Key, T> >
 			>
-	class map 
+	class map
 	{
 		public:
 			typedef ft::pair<const Key, T>										value_type;
