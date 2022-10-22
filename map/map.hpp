@@ -135,7 +135,7 @@ namespace ft
 			}
 			size_type erase(const key_type& k)
 			{
-				return _tree.delete_node(k, true);
+				return _tree.delete_node_key(k);
 			}
 			void erase(iterator first, iterator last)
 			{

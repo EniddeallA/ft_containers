@@ -1,6 +1,6 @@
 #pragma once
 
-#include <deque>
+#include "../vector/vector.hpp"
 #include <iostream>
 
 namespace ft 
@@ -8,7 +8,7 @@ namespace ft
 
     template<
             typename T,
-            typename Container = std::deque<T>
+            typename Container = ft::vector<T>
     >
     class stack {
 		public:

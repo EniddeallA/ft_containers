@@ -1,6 +1,6 @@
-SRC	= mymain.cpp
+SRC	= main.cpp
 NAME= test.out
-FLGS= #-Wall -Wextra -Werror --std=c++98
+FLGS= -Wall -Wextra -Werror --std=c++98
 
 all: $(NAME)
 

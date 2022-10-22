@@ -97,6 +97,11 @@ namespace ft {
     }; // class vector_iterator
 
     template<typename T, typename U>
+    bool operator==( vector_iterator<T> const& lhs, vector_iterator<U> const& rhs ) {
+        return lhs.it == rhs.it;
+    }
+	
+    template<typename T, typename U>
     bool operator!=(vector_iterator<T> const& lhs, const vector_iterator<U>& rhs ) {
         return lhs.it != rhs.it;
     }
@@ -121,8 +126,4 @@ namespace ft {
         return lhs.it < rhs.it;
     }
 
-    template<typename T, typename U>
-    bool operator==( vector_iterator<T> const& lhs, vector_iterator<U> const& rhs ) {
-        return lhs.it == rhs.it;
-    }
 }

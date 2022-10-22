@@ -96,11 +96,6 @@ namespace ft
 				return node->height;
 			}
 
-			void calculate_height(node_pointer n)
-			{
-				n->height = std::max(height(n->left), height(n->right)) + 1;
-			}
-			
 			int balance_factor(node_pointer n)
 			{
 				return height(n->left) - height(n->right);
@@ -114,6 +109,11 @@ namespace ft
 			bool right_unbalance(node_pointer n)
 			{
 				return balance_factor(n) < -1;
+			}
+			
+			void calculate_height(node_pointer n)
+			{
+				n->height = std::max(height(n->left), height(n->right)) + 1;
 			}
 
 			node_pointer rotate_left(node_pointer n) {
@@ -350,10 +350,10 @@ namespace ft
 				return to;
 			}
 
-			size_type delete_node(const key_type& key, bool is_key)
+			size_type delete_node_key(const key_type& key)
 			{
 				size_type old_size = _size;
-				if (empty() || !is_key) 
+				if (empty()) 
 					return 0;
 				_head = delete_key_node(_head, key);
 				if (_head) 
